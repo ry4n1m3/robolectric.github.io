@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h2>Quick Start</h2>
+
+<p>The quickest way to get started using Robolectric is to add the pre-built jar with all dependencies included to your
+current project. Instructions for other setup methods are covered below.</p>
+
+<p>Use the <code>@RunWith</code> annotation available in JUnit 4 to run your tests
+under Robolectric:</p>
+<pre class="highlight java"><span class="nd">@RunWith</span><span class="o">(</span><span class="n">RobolectricTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyActivityTest</span> <span class="o">{</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">shouldHaveApplicationName</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">appName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyActivity</span><span class="o">().</span><span class="na">getResources</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">app_name</span><span class="o">);</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">appName</span><span class="o">,</span> <span class="n">equalTo</span><span class="o">(</span><span class="s">"MyActivity"</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>If you&rsquo;d like to quickly get started using Robolectric to test your app, these instructions are for you. They will show
+you how to get started with Robolectric using a pre-built jar. While this is a good place to get started, you may find
+later that you want to make larger changes and contribute to Robolectric. A later section will explain how to start
+using Robolectric as a sub-module of your project.</p>
+
+<p>Probably the easiest way to get started is to create a Maven project and then import it into your IDE of choice.
+However we have provided IDE specific instructions if that is the method you prefer.</p>
+
+<h3>Using Maven</h3>
+
+<p>This is the method we recommend.</p>
+
+<p>If you are using Maven and the excellent
+<a href="http://code.google.com/p/maven-android-plugin/">maven-android-plugin</a> to build your project, simply add this to the
+dependencies section of your <code>pom.xml</code>:</p>
+<pre class="highlight xml"><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.pivotallabs<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>robolectric<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>X.X.X<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre>
+<p><b>&gt;&gt; <a href="maven-quick-start.html">Detailed step-by-step Maven instructions</a></b></p>
+
+<h3>Using IntelliJ:</h3>
+
+<ul>
+<li>It just works!</li>
+</ul>
+
+<p><b>&gt;&gt; <a href="intellij-quick-start.html">Detailed step-by-step IntelliJ instructions</a></b></p>
+
+<p>in case it doesn&rsquo;t.</p>
+
+<h3>Using Eclipse:</h3>
+
+<p>Eclipse will try to use the Android JUnit test runner by default for Android projects, so you will need a separate test
+project to run the test with Robolectric, and set up a run configuration to run the tests with the Eclipse JUnit
+Launcher.</p>
+
+<ul>
+<li><p>Create a new Java project in parallel with your app&rsquo;s project, as your test project. For example, if your app is named
+MyApp, you might create a MyAppRobolectricTest project.</p></li>
+<li><p>In many cases it will be advantageous to keep the source code for the tests under the same root folder as the source
+for the rest of the project. To make this work, use the &ldquo;Link Source&hellip;&rdquo; button in the Build Path dialog to create a
+link from this test project to the source root for the tests under the main project.</p></li>
+<li><p>Add the appropriate Android SDK jars to the test project&rsquo;s build path (e.g.
+<code>{android sdk root}/platforms/android-8/android.jar</code> and
+<code>{android sdk root}/add-ons/addon<em>google</em>apis<em>google</em>inc_8/libs/maps.jar</code>)</p></li>
+<li><p><a href="http://pivotal.github.com/robolectric/download.html">Download</a> robolectric-X.X.X-jar-with-dependencies.jar place it in your test project and
+add it to the build path, along with the JUnit library.</p></li>
+<li><p>Add your app&rsquo;s project as a project dependency to the build path of your test project.</p></li>
+<li><p><em>Important!</em> Add a new JUnit run/debug launch configuration to run the tests in the test folder. There may be a warning that
+multiple launchers are available, make sure to select the Eclipse JUnit Launcher instead of the Android JUnit Launcher.
+<b>Set the working directory to be the root of your main project, not that of your test project.</b></p></li>
+</ul>
+
+<p><b>&gt;&gt; <a href="eclipse-quick-start.html">Detailed step-by-step Eclipse instructions</a></b></p>
+
+<h3>In any configuration:</h3>
+
+<ul>
+<li>Use the <code>@RunWith</code> annotation available in JUnit 4 to run your tests under Robolectric:</li>
+</ul>
+<pre class="highlight java"><span class="nd">@RunWith</span><span class="o">(</span><span class="n">RobolectricTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyTest</span> <span class="o">{</span>
+    <span class="o">...</span>
+<span class="o">}</span>
+</pre>
+<ul>
+<li>See the <a href="https://github.com/robolectric/robolectricsample">Robolectric sample application</a> for more examples to get you
+started.</li>
+</ul>
+
+<h2>Setting up for Robolectric development</h2>
+
+<p>If you find that you need to extend or modify Robolectric&rsquo;s simulation of Android or you&rsquo;d like to contribute to the
+project, these instructions will help get you started. You can also track the progress of Robolectric as it evolves from
+its <a href="http://www.pivotaltracker.com/projects/105008">Tracker page</a></p>
+
+<h3>Using Maven:</h3>
+
+<p>Clone the robolectric git repository, modify it as needed, and use maven to install a snapshot of Robolectric:
+* <code>git clone git://github.com/robolectric/robolectric.git</code>
+* modify <code>pom.xml</code> and modify Robolectric&rsquo;s version by appending <code>-SNAPSHOT</code>
+if it&rsquo;s not there already (e.g. <code>0.9.6-SNAPSHOT</code>)
+* <code>mvn install</code></p>
+
+<p>Modify your project&rsquo;s pom to depend on the the same version of Robolectric as you specified in the Robolectric pom.</p>
+
+<p>To edit your project and Robolectric side-by-side in your IDE, follow the instructions above, and open the Robolectric
+pom as a module (in IntelliJ) or a separate project (in Eclipse).</p>
+
+<h3>Using IntelliJ without Maven:</h3>
+
+<ul>
+<li><a href="http://pivotal.github.com/robolectric/download.html">Download</a> robolectric-X.X.X-jar-with-dependencies.jar and add it to your other test
+library dependencies (such as junit.jar).</li>
+</ul>
+
+<p><b>&gt;&gt; <a href="intellij-quick-start.html">Detailed step-by-step IntelliJ instructions</a></b></p>
+
+<h3>Using Eclipse without Maven:</h3>
+
+<ul>
+<li><p>Follow the instructions for Eclipse quick start above, but don&rsquo;t download the
+robolectric-X.X.X-jar-with-dependencies.jar. Instead, use git to
+clone the Robolectric repository:</p>
+
+<p><code>git clone git://github.com/robolectric/robolectric.git</code></p></li>
+</ul>
+
+<p>(You&rsquo;ll probably want to fork the repo on github first so you can submit pull requests back to us.)</p>
+
+<ul>
+<li><p>Add robolectric as an Eclipse project and make your test project depend on it.</p></li>
+<li><p>Add the Android SDK jars to the robolectric project, as above.</p></li>
+</ul>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

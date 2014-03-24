@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Back in my day&hellip;</h1>
+
+<p>Before Robolectric 2.2, most tests created Activities by calling constructors directly, (<code>new MyActivity()</code>) and then manually calling lifecycle methods such as <code>onCreate()</code>. Also widely used were a set of methods in <code>ShadowActivity</code> (for instance <code>ShadowActivity.callOnCreate()</code>) that are precursors to <code>ActivityController</code>.</p>
+
+<p>It was a mess. The <code>ActivityController</code> is a Robolectric API that changes all of this. Its goal is to mimic how Android creates your Activities and drives them through their lifecycle.</p>
+
+<p><code>ActivityController</code> is a fluent API that was introduced in Robolectric 2.0 and is now required in 2.2. In addition to calling methods like <code>onCreate()</code>, it ensures that the internal state of the Activity is consistent with the lifecycle. This includes attaching the Activity to the Window and making system services like the <code>LayoutInflater</code> available.</p>
+
+<p><strong>The old methods for driving Activity lifecycle no longer work (or have been removed) in Robolectric 2.2.</strong></p>
+
+<h1>What do I do now?</h1>
+
+<p>You don&rsquo;t generally create an <code>ActivityController</code> directly. Use <code>Robolectric.buildActivity()</code> to get started. For the most basic of tests where you simply need an initialized Activity, you can often get away with the following line:</p>
+<pre class="highlight java"><span class="n">Activity</span> <span class="n">activity</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyAwesomeActivity</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">create</span><span class="o">().</span><span class="na">get</span><span class="o">();</span>
+</pre>
+<p>This will create a new instance of <code>MyAwesomeActivity</code> and call through the life cycle to <code>onCreate()</code>.</p>
+
+<p>Want to check that something happens during <code>onResume()</code> but not <code>onCreate()</code>? Easy!</p>
+<pre class="highlight java"><span class="n">ActivityController</span> <span class="n">activityController</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyAwesomeActivity</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">create</span><span class="o">().</span><span class="na">start</span><span class="o">();</span>
+<span class="n">Activity</span> <span class="n">activity</span> <span class="o">=</span> <span class="n">activityController</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+<span class="c1">// assert that something hasn't happened</span>
+<span class="n">activityController</span><span class="o">.</span><span class="na">resume</span><span class="o">();</span>
+<span class="c1">// assert it happened!</span>
+</pre>
+<p>Similar methods are included for <code>start()</code>, <code>pause()</code>, <code>stop()</code>, and <code>destroy()</code>. So, if you want to test the full creation lifecycle:</p>
+<pre class="highlight java"><span class="n">Activity</span> <span class="n">readyToGoActivity</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyAwesomeActivity</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">create</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">start</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">resume</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">visible</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</pre>
+<p>You can simulate starting the Activity with an intent:</p>
+<pre class="highlight java"><span class="n">Intent</span> <span class="kt">int</span><span class="n">ent</span><span class="o">;</span> <span class="c1">// Hey! you should assign me to something.</span>
+<span class="n">Activity</span> <span class="n">activityWithIntent</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyAwesomeActivity</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">withIntent</span><span class="o">(</span><span class="kt">int</span><span class="n">ent</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">create</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</pre>
+<p>&hellip; or restore saved instance state:</p>
+<pre class="highlight java"><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">;</span> <span class="c1">//  Something seems missing here...</span>
+<span class="n">Activity</span> <span class="n">activityWithIntent</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyAwesomeActivity</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">create</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">restoreInstanceState</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</pre>
+<p>Check out the <a href="/javadoc/org/robolectric/util/ActivityController.html"><code>ActivityController</code> Java Docs</a> to see more public methods available for your testing needs.</p>
+
+<h1>Wait, What&rsquo;s This <code>visible()</code> Nonsense?</h1>
+
+<p>Turns out that in a real Android app, the view hierarchy of an <code>Activity</code> is not attached to the <code>Window</code> until sometime after <code>onCreate()</code> is called. Until this happens, the <code>Activity</code>&rsquo;s views do not report as visible. This means you can&rsquo;t click on them (amongst other unexpected behavior). The <code>Activity</code>&rsquo;s hierarchy is attached to the <code>Window</code> on a device or emulator <em>after</em> <code>onPostResume()</code> on the <code>Activity</code>. Rather than make assumptions about when the visibility should be updated, Robolectric puts the power in the developer&rsquo;s hands when writing tests.</p>
+
+<p>So when do you call it? Whenever you&rsquo;re interacting with the views inside the <code>Activity</code>. Methods like <code>Robolectric.clickOn()</code> require that the view is visible and properly attached in order to function. You should call <code>visible()</code> after <code>create()</code>.</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

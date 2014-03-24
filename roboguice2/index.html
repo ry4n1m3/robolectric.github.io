@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h3>Test-only Bindings</h3>
+
+<p>During test it can be useful to use fake objects that produce well-known values in order to simplify assertions. Below
+is an example of a fake <code>Provider&lt;Date&gt;</code>.</p>
+<pre class="highlight java"><span class="cm">/* bound as singleton so tests will get the same provider as the production code */</span>
+<span class="nd">@Singleton</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FakeDateProvider</span> <span class="kd">implements</span> <span class="n">Provider</span><span class="o">&lt;</span><span class="n">Date</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">();</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="n">Date</span> <span class="n">get</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">date</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">setDate</span><span class="o">(</span><span class="n">String</span> <span class="n">dateString</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">...</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<h3>Defining and Inserting a Test Module</h3>
+
+<p>A test module contains the bindings for our fake date provider.</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RobolectricSampleTestModule</span> <span class="kd">extends</span> <span class="n">AbstractAndroidModule</span> <span class="o">{</span>
+    <span class="nd">@Override</span> <span class="kd">protected</span> <span class="kt">void</span> <span class="n">configure</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">bind</span><span class="o">(</span><span class="n">Counter</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">in</span><span class="o">(</span><span class="n">Scopes</span><span class="o">.</span><span class="na">SINGLETON</span><span class="o">);</span>
+        <span class="n">bind</span><span class="o">(</span><span class="n">Date</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">toProvider</span><span class="o">(</span><span class="n">FakeDateProvider</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>Create a new subclass of <code>GuiceApplication</code> that contributes your project&rsquo;s modules to the standard
+Android modules that will be injected:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleGuiceApplication</span> <span class="kd">extends</span> <span class="n">GuiceApplication</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Module</span> <span class="n">module</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RobolectricSampleModule</span><span class="o">();</span>
+
+    <span class="nd">@Override</span> <span class="kd">protected</span> <span class="kt">void</span> <span class="n">addApplicationModules</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Module</span><span class="o">&gt;</span> <span class="n">modules</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">modules</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">module</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>Add a new setter method so that a test module can be used instead:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleGuiceApplication</span> <span class="kd">extends</span> <span class="n">GuiceApplication</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">setModule</span><span class="o">(</span><span class="n">Module</span> <span class="n">module</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">module</span> <span class="o">=</span> <span class="n">module</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>Override the production module with a test module in the test runner, like this:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedTestRunner</span> <span class="kd">extends</span> <span class="n">RobolectricTestRunner</span> <span class="o">{</span>
+   <span class="o">...</span>
+   <span class="nd">@Override</span> <span class="kd">protected</span> <span class="n">Application</span> <span class="n">createApplication</span><span class="o">()</span> <span class="o">{</span>
+       <span class="n">SampleGuiceApplication</span> <span class="n">application</span> <span class="o">=</span>
+           <span class="o">(</span><span class="n">SampleGuiceApplication</span><span class="o">)</span> <span class="kd">super</span><span class="o">.</span><span class="na">createApplication</span><span class="o">();</span>
+       <span class="n">application</span><span class="o">.</span><span class="na">setModule</span><span class="o">(</span><span class="k">new</span> <span class="n">RobolectricSampleTestModule</span><span class="o">());</span>
+
+       <span class="k">return</span> <span class="n">application</span><span class="o">;</span>
+   <span class="o">}</span>
+   <span class="o">...</span>
+<span class="o">}</span>
+</pre>
+<h3>Using the New Bindings</h3>
+
+<p>To take advantage of the bindings created for test, the production code needs to inject a <code>Date</code> instead of
+instantiating one itself.</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedActivity</span> <span class="kd">extends</span> <span class="n">GuiceActivity</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="n">DateFormat</span> <span class="n">dateFormat</span> <span class="o">=</span> <span class="n">DateFormat</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+
+    <span class="nd">@Inject</span> <span class="n">Date</span> <span class="n">date</span><span class="o">;</span>
+
+    <span class="nd">@Override</span> <span class="kd">protected</span> <span class="kt">void</span> <span class="n">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">...</span>
+        <span class="n">injectedTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">caption</span> <span class="o">+</span> <span class="s">" - "</span> <span class="o">+</span> <span class="n">dateFormat</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">date</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>The FakeDateProvider can then be injected into the test and used to set injected dates to a well-known value
+that can be asserted:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedActivityTest</span> <span class="o">{</span>
+    <span class="nd">@Inject</span> <span class="n">FakeDateProvider</span> <span class="n">fakeDateProvider</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">setUp</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">fakeDateProvider</span><span class="o">.</span><span class="na">setDate</span><span class="o">(</span><span class="s">"Dec 8, 2010"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">shouldAssignStringToTextView</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">injectedActivity</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+        <span class="n">TextView</span> <span class="n">injectedTextView</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">injectedActivity</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">injected_text_view</span><span class="o">);</span>
+
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">injectedTextView</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">(),</span>
+                <span class="n">equalTo</span><span class="o">(</span><span class="s">"Roboguice Activity tested with Robolectric - Dec 8, 2010"</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Coding Guidelines</h1>
+
+<h2>Functionality should have appropriate unit tests</h2>
+
+<p>Robolectric is a unit testing framework and it is important that Robolectric itself be very well tested. All classes should have unit test classes. All public methods should have unit tests. Those classes and methods should have their possible states well tested. Copied Android source should at least have &ldquo;smoke tests&rdquo; that assure the copied functionality is wired up correctly. Pull requests introducing untested functionality should not accepted, and reviewers should give appropriate feedback to the submitter.</p>
+
+<h2>Code can be copied from Android source when appropriate</h2>
+
+<p>&ldquo;When appropriate&rdquo; is subjective. In an effort to avoid complexity, copying Android source as the basis for Shadow object functionality is discouraged. That said, sometimes the functionality is complex and the Android implementation is what is needed. Contributors and reviewers should use their best judgement: should a 3000-line Android class be copied to gain access to a boolean getter and setter? It depends.</p>
+
+<h2>Follow the code formatting standard</h2>
+
+<p>This is essentially the IntelliJ default Java style, but with two-space indents.
+* Spaces, not tabs.
+* Indenting: <a href="http://en.wikipedia.org/wiki/Indent_style#Variant:_1TBS">http://en.wikipedia.org/wiki/Indent_style#Variant:_1TBS</a> but with two spaces, not four.
+* Curly braces for everything: if, else, etc.
+* One line of white space between methods</p>
+
+<h1>Git Submodules</h1>
+
+<p>If you are building an Android project that frequently needs changes to Robolectric, you probably want to maintain a fork of Robolectric from which you
+can submit pull requests. One way to set things up is to use a git submodule to this fork from your main project.</p>
+
+<p><a href="https://github.com/pivotal/AndroidIntelliJStarter">Android IntelliJ Starter</a>
+is an Android project generator which configures Robolectric as a <a title="git-submodule(1)" href="http://kernel.org/pub/software/scm/git/docs/git-submodule.html">git submodule</a>.</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

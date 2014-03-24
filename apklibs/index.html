@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Configuring ApkLibs</h1>
+
+<h2>project.properties</h2>
+
+<p>If your project uses any ApkLibs you will have to set these up to work correctly with Robolectric. This
+simply requires creating a <code>project.properties</code> file for your project that declares the dependencies to
+Robolectric.</p>
+
+<p>The <code>project.properties</code> file for your project should sit in the root of the project and looks something like this:</p>
+<pre class="highlight plaintext">target=android-&lt;android API level to target&gt;
+android.library.reference.1=&lt;relative path to first dependency&gt;
+android.library.reference.2=&lt;relative path to second dependency&gt;
+</pre>
+<p>Robolectric will look for and then parse this file to load dependencies before any tests run.</p>
+
+<h2>Multiple dependency locations</h2>
+
+<p>If you&rsquo;re working in an IDE such as IntelliJ and then pushing to a CI that uses Maven you might run into
+the problem of a dependency appearing in different places depending on the environment - the IDE will probably compile
+to a different directory structure than Maven would. To deal with this
+Robolectric will only attempt to load dependencies that exist at run time. This means you can just
+list both possible locations for the dependency like so:</p>
+<pre class="highlight plaintext">android.library.reference.1=dev-env-dir/my-awesome-dependency
+android.library.reference.2=ci-env-dir/my-awesome-dependency
+</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

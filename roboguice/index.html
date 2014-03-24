@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Integrating RoboGuice and Robolectric</h1>
+
+<p>The <a href="https://github.com/robolectric/RobolectricSample">RobolectricSample application</a> includes an
+example of how to test Android applications that are built using the <a href="http://code.google.com/p/roboguice/">RoboGuice</a>
+dependency injection framework. This article explains what we did and how you can add RoboGuice to your own projects.</p>
+
+<h3>The Sample Activity</h3>
+
+<p>For the most part RoboGuice will just work when injected instances of classes are exercised by unit tests, but with a
+little bit of work can inject those instances directly into our tests. As an example, we can start with this simple
+activity:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedActivity</span> <span class="kd">extends</span> <span class="n">GuiceActivity</span> <span class="o">{</span>
+    <span class="nd">@InjectResource</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">injected_activity_caption</span><span class="o">)</span> <span class="n">String</span> <span class="n">caption</span><span class="o">;</span>
+    <span class="nd">@InjectView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">injected_text_view</span><span class="o">)</span> <span class="n">TextView</span> <span class="n">injectedTextView</span><span class="o">;</span>
+
+    <span class="nd">@Override</span> <span class="kd">protected</span> <span class="kt">void</span> <span class="n">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">injected</span><span class="o">);</span>
+        <span class="n">injectedTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">caption</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>To get this to work you need to change your manifest to point to <code>roboguice.application.GuiceApplication</code>
+(or a subclass) and link with the RoboGuice library. We wrote the following test:</p>
+<pre class="highlight java"><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldAssignStringToTextView</span><span class="p">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="n">injectedActivity</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+    <span class="n">TextView</span> <span class="n">injectedTextView</span> <span class="o">=</span>
+        <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">injectedActivity</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">injected_text_view</span><span class="o">);</span>
+    <span class="n">assertEquals</span><span class="o">(</span><span class="n">injectedTextView</span><span class="o">.</span><span class="na">getText</span><span class="o">(),</span> <span class="n">caption</span><span class="o">);</span>
+<span class="o">}</span>
+</pre>
+<p>This test passes but the set up for it is ugly:</p>
+<pre class="highlight java"><span class="n">InjectedActivity</span> <span class="n">injectedActivity</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">caption</span><span class="o">;</span>
+<span class="nd">@Before</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="p">(</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">injectedActivity</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InjectedActivity</span><span class="o">();</span>
+    <span class="n">Resources</span> <span class="n">resources</span> <span class="o">=</span> <span class="n">injectedActivity</span><span class="o">.</span><span class="na">getResources</span><span class="o">();</span>
+    <span class="n">caption</span> <span class="o">=</span> <span class="n">resources</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">injected_activity_caption</span><span class="o">);</span>
+<span class="o">}</span>
+</pre>
+<h3>Injecting Tests</h3>
+
+<p>With some changes to the test runner we can make it look like this:</p>
+<pre class="highlight java">    <span class="nd">@Inject</span> <span class="n">InjectedActivity</span> <span class="n">injectedActivity</span><span class="o">;</span>
+    <span class="nd">@InjectResource</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">injected_activity_caption</span><span class="o">)</span> <span class="n">String</span> <span class="n">caption</span><span class="o">;</span>
+</pre>
+<p>In <code>RobolectricSample</code> we created a subclass of <code>RobolectricTestRunner</code> called
+<code>InjectedTestRunner</code> and extended it to ensure that instances of the test class were
+injected before the tests were run. <code>RobolectricTestRunner</code> has a method called
+<code>prepareTest(Test test)</code> that exists for the purpose of giving its subclasses access to the
+<code>Test</code> object just before each test. It can be used for injection as follows:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedTestRunner</span> <span class="kd">extends</span> <span class="n">RobolectricTestRunner</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">InjectedTestRunner</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">testClass</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InitializationError</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">testClass</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">prepareTest</span><span class="o">(</span><span class="n">Object</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">GuiceApplication</span> <span class="n">sampleApplication</span> <span class="o">=</span> <span class="o">(</span><span class="n">GuiceApplication</span><span class="o">)</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">application</span><span class="o">;</span>
+        <span class="n">Injector</span> <span class="n">injector</span> <span class="o">=</span> <span class="n">sampleApplication</span><span class="o">.</span><span class="na">getInjector</span><span class="o">();</span>
+        <span class="n">injector</span><span class="o">.</span><span class="na">injectMembers</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>It can be used in a <code>@RunWith</code> clause instead of <code>RobolectricTestRunner</code>:</p>
+<pre class="highlight java"><span class="nd">@RunWith</span><span class="o">(</span><span class="n">InjectedTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">InjectedActivityTest</span> <span class="o">{</span>
+<span class="o">...</span>
+<span class="o">}</span>
+</pre>
+<h3>Injecting <code>Context</code> Objects onto Tests</h3>
+
+<p>There are some types, such as <code>Context</code>s that RoboGuice can&rsquo;t inject without entering the context scope
+in the test runner&rsquo;s <code>prepareTest()</code> method:</p>
+<pre class="highlight java"><span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">prepareTest</span><span class="o">(</span><span class="n">Object</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">GuiceApplication</span> <span class="n">sampleApplication</span> <span class="o">=</span> <span class="o">(</span><span class="n">GuiceApplication</span><span class="o">)</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">application</span><span class="o">;</span>
+    <span class="n">Injector</span> <span class="n">injector</span> <span class="o">=</span> <span class="n">sampleApplication</span><span class="o">.</span><span class="na">getInjector</span><span class="o">();</span>
+    <span class="n">ContextScope</span> <span class="n">scope</span> <span class="o">=</span> <span class="n">injector</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">ContextScope</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="n">scope</span><span class="o">.</span><span class="na">enter</span><span class="o">(</span><span class="n">sampleApplication</span><span class="o">);</span>
+    <span class="n">injector</span><span class="o">.</span><span class="na">injectMembers</span><span class="o">(</span><span class="n">test</span><span class="o">);</span>
+<span class="o">}</span>
+</pre>
+<p>Now it is possible to inject a <code>Context</code> object onto the test:</p>
+<pre class="highlight java"><span class="nd">@Inject</span> <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
+<span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldBeAbleToInjectAContext</span><span class="p">(</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="n">assertNotNull</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+<span class="o">}</span>
+</pre>
+<h4><a href="/roboguice2/">Next: Test Modules</a></h4>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

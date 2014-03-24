@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Robolectric</h1>
+
+<h2>Test-Drive Your Android Code</h2>
+
+<p>Running tests on an Android emulator or device is slow! Building, deploying, and launching the app often takes a minute
+or more. That&rsquo;s no way to do TDD. There must be a better way.</p>
+
+<p>Wouldn&rsquo;t it be nice to run your Android tests directly from inside your IDE? Perhaps you&rsquo;ve tried, and been thwarted by
+the dreaded <code>java.lang.RuntimeException: Stub!</code>?</p>
+
+<p><a href="http://robolectric.org/">Robolectric</a> is a unit test framework that de-fangs the Android SDK jar so you
+can test-drive the development of your Android app.  Tests run inside the JVM on your workstation in seconds. With
+Robolectric you can write tests like this:</p>
+<pre class="highlight java"><span class="c1">// Test class for MyActivity</span>
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">RobolectricTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyActivityTest</span> <span class="o">{</span>
+
+  <span class="nd">@Test</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="n">clickingButton_shouldChangeResultsViewText</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+    <span class="n">Activity</span> <span class="n">activity</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MyActivity</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">create</span><span class="o">().</span><span class="na">get</span><span class="o">();</span>
+
+    <span class="n">Button</span> <span class="n">pressMeButton</span> <span class="o">=</span> <span class="o">(</span><span class="n">Button</span><span class="o">)</span> <span class="n">activity</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">press_me_button</span><span class="o">);</span>
+    <span class="n">TextView</span> <span class="n">results</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">activity</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">results_text_view</span><span class="o">);</span>
+
+    <span class="n">pressMeButton</span><span class="o">.</span><span class="na">performClick</span><span class="o">();</span>
+    <span class="n">String</span> <span class="n">resultsText</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">resultsText</span><span class="o">,</span> <span class="n">equalTo</span><span class="o">(</span><span class="s">"Testing Android Rocks!"</span><span class="o">));</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>Robolectric makes this possible by rewriting Android SDK classes as they&rsquo;re being loaded and making it possible for them
+to run on a regular JVM.</p>
+
+<h3>SDK, Resources, &amp; Native Method Emulation</h3>
+
+<p>Robolectric handles inflation of views, resource loading, and lots of other stuff that&rsquo;s implemented in native C code on
+Android devices. This allows tests to do most things you could do on a real device. It&rsquo;s easy to provide our own
+implementation for specific SDK methods too, so you could simulate error conditions or real-world sensor behavior, for
+example.</p>
+
+<h3>Run Tests Outside of the Emulator</h3>
+
+<p>Robolectric lets you run your tests on your workstation, or on your Continuous Integration environment in a regular JVM,
+without an emulator. Because of this, the dexing, packaging, and installing-on-the emulator steps aren&rsquo;t necessary,
+reducing test cycles from minutes to seconds so you can iterate quickly and refactor your code with confidence.</p>
+
+<h3>No Mocking Frameworks Required</h3>
+
+<p>An alternate approach to Robolectric is to use mock frameworks such as <a href="http://code.google.com/p/mockito/">Mockito</a> or
+<a href="http://code.google.com/p/android-mock/">Android Mock</a> to mock out the Android SDK. While this is a valid approach, it
+often yields tests that are essentially reverse implementations of the application code.</p>
+
+<p>Robolectric allows a test style that is closer to black box testing, making the tests more effective for refactoring and
+allowing the tests to focus on the behavior of the application instead of the implementation of Android. You can still
+use a mocking framework along with Robolectric if you like.</p>
+
+<h2>Contributing</h2>
+
+<p>We welcome contributions. Please <a href="http://github.com/robolectric/robolectric">fork</a> and submit pull requests. Don&rsquo;t forget to include tests!</p>
+
+<h2>Sample Project</h2>
+
+<p>Look at the <a href="https://github.com/robolectric/robolectricsample">sample project</a> to see how fast and easy it can be to test
+drive the development of Android applications.</p>
+
+<h2>Robolectric&rsquo;s current maintainers:</h2>
+
+<ul>
+<li><a href="https://github.com/avh4">Aaron VonderHaar</a>, Pivotal Labs</li>
+<li><a href="http://github.com/Xian">Christian Williams</a>, Square</li>
+<li><a href="https://github.com/jberkel">Jan Berkel</a>, SoundCloud</li>
+<li><a href="https://github.com/JakeWharton">Jake Wharton</a>, Square</li>
+<li><a href="https://github.com/mportuesisf">Michael Portuesi</a>, Zoodles</li>
+<li><a href="https://github.com/pgoodwin">Phil Goodwin</a>, Pivotal Labs</li>
+<li><a href="https://github.com/rkawala">Rick Kawala</a>, Pivotal Labs</li>
+<li><a href="https://github.com/tylerschultz">Tyler Schultz</a>, Pivotal Labs</li>
+</ul>
+
+<h2>Acknowledgments</h2>
+
+<ul>
+<li>Robolectric was originally developed by <a href="http://github.com/Xian">Christian Williams</a> at <a href="http://www.xtremelabs.com/">XtremeLabs</a>. Big thanks to XtremeLabs for their support.</li>
+<li>Considerable contributions have been made by the teams at Pivotal Labs, Zoodles, Square, and Soundcloud. Thanks to those companies for their support!</li>
+<li>Thanks to <a href="http://shanefrancis.com/">Shane Francis</a> for the (Philip K. Dick-)inspired name, and to Pivots <a href="mailto:ofri@pivotallabs.com">Ofri Afek</a> and <a href="mailto:jessica@pivotallabs.com">Jessica Miller</a> for our logo!</li>
+</ul>
+
+<h2>Support</h2>
+
+<p><strong>Google Group:</strong> <a href="http://groups.google.com/group/robolectric">http://groups.google.com/group/robolectric</a><br/>
+<strong>Group Email:</strong> <a href="mailto:robolectric@googlegroups.com">robolectric@googlegroups.com</a><br/>
+<strong>Samples:</strong> <a href="http://github.com/robolectric/RobolectricSample">http://github.com/robolectric/RobolectricSample</a></p>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

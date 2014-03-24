@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h2>Quick Start for Eclipse</h2>
+
+<hr>
+
+<h3>Download JARs</h3>
+
+<p>You&rsquo;ll need at least the &ldquo;robolectric-x.x.x-jar-with-dependencies&rdquo; jar, which can be obtained <a href="/download/">here</a>. You may also want the source jar matching your Robolectric version from the same location, in case you run in to any bugs. Also recommended, but not required, is the <a href="https://code.google.com/p/hamcrest/downloads/list">latest hamcrest-all jar</a>.</p>
+
+<h3>Project Creation</h3>
+
+<p>Create a project
+* File &rarr; New &rarr; Project&hellip; &rarr; Android &rarr; Android Project
+* Click &ldquo;Next&rdquo;</p>
+
+<p>New Android Project dialog
+* Project/Application Name: MyProject
+* Package Name: com.example.myproject
+* Target/Compile With: API 18</p>
+
+<p>Make sure to note the package name, as you&rsquo;ll need it later. Target SDK can&rsquo;t currently be set to anything higher than API18, as Robolectric doesn&rsquo;t yet support 19.</p>
+
+<p>Add a &lsquo;test&rsquo; directory to your project
+* Right click on &lsquo;MyProject&rsquo; in the package explorer &rarr; New&hellip; &rarr; Folder (<strong>not</strong> Source Folder)
+* Folder name: test (do not make this a source folder for this project - hang tight)
+* Click &ldquo;Finish&rdquo;</p>
+
+<p>Add a &lsquo;test&rsquo; subdirectory under libs
+* Right click on &lsquo;libs&rsquo; &rarr; New&hellip; &rarr; Folder (Again, <strong>not</strong> a source folder)
+* Folder name &lsquo;test&rsquo; 
+* Click &ldquo;Finish&rdquo;</p>
+
+<p>Finally, drag and drop/otherwise copy your test-related jar files (robolectric/sources/hamcrest) into the libs/test directory.</p>
+
+<h3>Create a <em>JAVA</em> project for your tests</h3>
+
+<p>Create and configure test Java project (<strong>not</strong> an Android Application Project)
+* File &rarr; New &rarr; Java Project&hellip;
+* Project Name: MyProjectTests
+* Under &ldquo;Project Layout&rdquo;, select &ldquo;Use project folder as root for sources and class files&rdquo;
+* On Source tab Under &ldquo;Details&rdquo;, click &ldquo;Link additional source&rdquo;
+* Browse to and select &ldquo;&hellip;/MyProject/test&rdquo;
+* Click &ldquo;Finish&rdquo; on the &ldquo;Link additional sources&rdquo; dialog (keep the new Java project dialog open)</p>
+
+<p>Add dependency on the Android project
+* Select &ldquo;Projects&rdquo; tab at the top of the New Java Project dialog
+* Click &ldquo;Add&hellip;&rdquo;
+* Check &ldquo;MyProject&rdquo;
+* Click &ldquo;OK&rdquo;</p>
+
+<p>Add required libraries
+* Select &ldquo;Libraries&rdquo; tab at the top of the New Java Project dialog
+* Robolectric jars
+  * Click &ldquo;Add JARS&rdquo;
+  * Select all jars from within MyProject/libs/test, then click &ldquo;OK&rdquo;
+* Android jars
+  * Click &ldquo;Add External Jars&rdquo;
+  * Navigate to your SDK install directory, then select &ldquo;platforms/android-xx/android.jar&rdquo;, choosing the API version to match the one you chose for Target when creating the Android project.
+  * Click &ldquo;Open&rdquo; to add android.jar
+* JUnit
+  * Click &ldquo;Add Library&rdquo;
+  * Select JUnit, then click &ldquo;Next&rdquo;
+  * Change the JUnit version to 4 (Robolectric requires JUnit 4), then click &ldquo;Finish&rdquo;</p>
+
+<p>Set classpath order
+  - Select &ldquo;Order and Export&rdquo; tab at the top of the New Java Project dialog
+  - Select android.jar, and move it down so that it appears below the robolectric jars</p>
+
+<p>Click &ldquo;Finish&rdquo;, closing the new Java project dialog</p>
+
+<p>Most of these settings can be changed later by right-clicking your test project, selecting &ldquo;Build path&rdquo; &rarr; &ldquo;Configure Build Path&rdquo;</p>
+
+<h3>Create a test Run Configuration</h3>
+
+<p>Your tests will <em>not</em> run without this step; Robolectric will not be able to locate your project resources.
+* Click &ldquo;Run&rdquo; &rarr; &ldquo;Run Configurations&hellip;&rdquo;
+* Double click &ldquo;<em>JUnit</em>&rdquo; (<strong>not</strong> &ldquo;Android JUnit Test&rdquo;)
+* Name: MyProjectTests
+* Select the &ldquo;Run all tests in the selected project, package or source folder:&rdquo; radio button
+* Click the &ldquo;Search&rdquo; button
+* Select &ldquo;MyProjectTest&rdquo;
+* Test runner: JUnit 4
+* Click on the link &ldquo;Multiple launchers available Select one&hellip;&rdquo; at the bottom of the dialog
+* Check the &ldquo;Use configuration specific settings&rdquo; box
+* Select &ldquo;Eclipse JUnit Launcher&rdquo;
+* Click &ldquo;OK&rdquo;
+* Click the &ldquo;Arguments&rdquo; tab
+* Under &ldquo;Working directory:&rdquo; select the &ldquo;Other:&rdquo; radio button
+* Click &ldquo;Workspace&hellip;&rdquo;
+* Select &ldquo;MyProject&rdquo; (<strong>not</strong> &ldquo;MyProjectTest&rdquo;, The value inside of &lsquo;Other&rsquo; edit box should be &lsquo;${workspace_loc:MyProject}&rsquo;), then click &ldquo;OK&rdquo;
+* Click &ldquo;Apply&rdquo; then &ldquo;Close&rdquo;</p>
+
+<h3>Verify your setup</h3>
+
+<ul>
+<li>Right click the &ldquo;test&rdquo; source folder under &ldquo;MyProjectTest&rdquo;</li>
+<li>Select &ldquo;New&rdquo;&rarr;&ldquo;Class&rdquo;</li>
+<li>Package: &ldquo;com.example&rdquo;</li>
+<li>Name: &ldquo;MainActivityTest&rdquo; (the name of the default activity created in your Android project suffixed with &ldquo;test&rdquo;</li>
+<li>Click &ldquo;Finish&rdquo;</li>
+<li>Add the following source:</li>
+</ul>
+<pre class="highlight java"><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">myproject</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.robolectric.Robolectric</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.robolectric.RobolectricTestRunner</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.Before</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.runner.RunWith</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">hamcrest</span><span class="o">.</span><span class="na">CoreMatchers</span><span class="o">.</span><span class="na">equalTo</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">org</span><span class="o">.</span><span class="na">junit</span><span class="o">.</span><span class="na">Assert</span><span class="o">.</span><span class="na">assertThat</span><span class="o">;</span>
+
+<span class="nd">@RunWith</span><span class="o">(</span><span class="n">RobolectricTestRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivityTest</span> <span class="o">{</span>
+
+    <span class="n">MainActivity</span> <span class="n">activity</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">setup</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">activity</span> <span class="o">=</span> <span class="n">Robolectric</span><span class="o">.</span><span class="na">buildActivity</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">create</span><span class="o">().</span><span class="na">get</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">shouldHaveHappySmiles</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> 
+    <span class="o">{</span>
+        <span class="n">String</span> <span class="n">hello</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">activity</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">hello_world</span><span class="o">);</span>
+        <span class="n">assertThat</span><span class="o">(</span><span class="n">hello</span><span class="o">,</span> <span class="n">equalTo</span><span class="o">(</span><span class="s">"Hello world!"</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>To run the tests
+* &ldquo;Run&rdquo; &rarr; &ldquo;Run Configurations&hellip;&rdquo;
+* Select &ldquo;JUnit&rdquo; &rarr; &ldquo;MyProjectTests&rdquo;
+* Click &ldquo;Run&rdquo;</p>
+
+<p>The tests may take quite a while to start running after the first launch. Robolectric downloads a real Android jar on the first run, placing it in your local maven repo. Future test runs are considerably faster.</p>
+
+<h3><em>If you get a RuntimeException saying: &ldquo;no such layout layout/main&rdquo;</em></h3>
+
+<p>It means that you have tried to run a test for which you do not have a Run Configuration set up. To remedy this:
+* Right click on the test
+* &ldquo;Run As&rdquo; &rarr; &ldquo;Run Configurations&hellip;&rdquo;
+* Double click &ldquo;JUnit&rdquo; (this will magically make the test you&rsquo;re running appear under JUnit)
+* Select &ldquo;MyActivityTest&rdquo; (or the name of whichever test you are currently trying to run)
+* TestRunner: JUnit 4
+* Click on the link &ldquo;Multiple launchers available Select one&hellip;&rdquo; (or it also may appear as &ldquo;Using XXX Launcher - Select
+other&hellip;&rdquo;) at the bottom of the dialog
+* Check the &ldquo;Use configuration specific settings&rdquo; box
+* Select &ldquo;Eclipse JUnit Launcher&rdquo;
+* Click &ldquo;OK&rdquo;
+* Click the &ldquo;Arguments&rdquo; tab
+* Under &ldquo;Working directory:&rdquo; select the &ldquo;Other:&rdquo; radio button
+* Click &ldquo;Workspace&hellip;&rdquo;
+* Select &ldquo;MyProject&rdquo; (<em>not</em> &ldquo;MyProjectTest&rdquo;)
+* Click &ldquo;OK&rdquo;
+* Click &ldquo;Close&rdquo;</p>
+
+<p>Are these instructions helpful? confusing? <a href="http://groups.google.com/group/robolectric">Let us know</a>! any feedback is helpful. Thanks -Robolectric</p>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

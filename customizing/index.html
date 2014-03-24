@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <blockquote>
+<h1>NOTE:</h1>
+
+<p>This page mostly refers to Robolectric 1.x. Things have changed significantly with Robolectric 2.0. See
+<a href="http://robolectric.blogspot.com/2013/04/the-test-lifecycle-in-20.html">this blog post</a> for more information.</p>
+</blockquote>
+
+<h2></h2>
+
+<h1>Customizing Robolectric</h1>
+
+<p>Many aspects of Robolectric can be configured at runtime by subclassing <code>RobolectricTestRunner</code> to create a
+custom test runner.</p>
+
+<h2>Test Setup</h2>
+
+<h3>Location of AndroidManifest.xml and resources</h3>
+
+<p>By default, Robolectric will look for your <code>AndroidManifest.xml</code> file in the current working directory, and
+will look for your resource files in the <code>&quot;res&quot;</code> directory in the same place.</p>
+
+<p>You can override these defaults in your custom test runner by specifying alternate values in the super constructor call:</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomTestRunner</span> <span class="kd">extends</span> <span class="n">RobolectricTestRunner</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">CustomTestRunner</span><span class="o">(</span><span class="n">Class</span> <span class="n">testClass</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InitializationError</span> <span class="o">{</span>
+        <span class="c1">// defaults to "AndroidManifest.xml", "res" in the current directory</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">testClass</span><span class="o">,</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">"../other/project-root"</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<h3>Overriding <code>project.properties</code></h3>
+
+<p>During test initialization, roboletric will attempt to locate all <code>android.library.reference</code> listed in the <code>project.properties</code> file. Unfortunately the locations are set by the ADT plugin and depending on the build environment may not point to the correct location – for example when performing a maven release. To counter the fixed location set in the <code>project.proerties</code>, roboletric provides an override mechanism. Simply placing a <code>test-project.properties</code> in the same directory as the <code>project.properties</code> will cause roboletric to override any <code>android.library.reference</code>s with those from the <code>test-project.properties</code> file. </p>
+
+<h3>Test setup and tear-down</h3>
+
+<p>Robolectric resets some internal state automatically before every test, including:
+* stored SharedPreferences
+* displayed Toasts and Dialogs
+* enqueued Looper work</p>
+
+<p>Robolectric provides hooks for specifying your own code to run before and after every test in every test class that uses
+your test runner. This can be especially useful for resetting state between tests, or triggering dependency injection
+(e.g. with RoboGuice).</p>
+<pre class="highlight java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomTestRunner</span> <span class="kd">extends</span> <span class="n">RobolectricTestRunner</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">CustomTestRunner</span><span class="o">(</span><span class="n">Class</span> <span class="n">testClass</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InitializationError</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">testClass</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">prepareTest</span><span class="o">(</span><span class="n">Object</span> <span class="n">test</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">beforeTest</span><span class="o">(</span><span class="n">Method</span> <span class="n">method</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span> <span class="kd">public</span> <span class="kt">void</span> <span class="n">afterTest</span><span class="o">(</span><span class="n">Method</span> <span class="n">method</span><span class="o">)</span> <span class="o">{</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

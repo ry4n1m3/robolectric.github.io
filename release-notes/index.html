@@ -1,0 +1,531 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Robolectric</title>
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(["_setAccount", "UA-19269905-1"]);
+  _gaq.push(["_trackPageview"]);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+    <link href="../stylesheets/application-5ae8d8e4.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../javascripts/application-da39a3ee.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="page" class="container">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <a href="/"><img class="logo" src="../images/robolectric-7fb6698b.png" /></a>
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/getting_started/">Getting Started</a></li>
+    <li class="nav-item"><a href="/eclipse-quick-start/">Eclipse</a></li>
+    <li class="nav-item"><a href="/download/">Download Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/user-guide/">User Guide</a>
+    <li class="nav-item"><a href="/activity-lifecycle/">Driving the Activity Lifecycle</a></li>
+    <li class="nav-item"><a href="/apklibs/">Working with ApkLibs</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/extending/">Extending</a></li>
+    <li class="nav-item"><a href="/customizing/">Test Runner</a></li>
+    <li class="nav-item"><a href="/roboguice/">RoboGuice (Part 1)</a></li>
+    <li class="nav-item"><a href="/roboguice2/">RoboGuice (Part 2)</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/contributor-guidelines/">Contributing</a></li>
+    <li class="nav-item"><a href="/android-jars/">Real Android Jars</a></li>
+</ul>
+
+<ul class="nav nav-stacked">
+    <li class="nav-header"><a href="/resources/">Resources</a></li>
+    <li class="nav-item"><a href="/javadoc/?overview-summary.html">JavaDoc</a></li>
+    <li class="nav-item"><a href="/release-notes/">Release Notes</a></li>
+
+    <li class="nav-item"><a href="http://robolectric.blogspot.com">Blog</a></li>
+    <li class="nav-item"><a href="http://groups.google.com/group/robolectric">Google Group</a></li>
+</ul>
+            </div>
+            <div id="content" class="col-md-9">
+                <h1>Release Notes</h1>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.2">Release 2.2</a> - October 7, 2013</h2>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Robolectric now does not have a fake implementation of <code>Window</code> (<code>RoboWindow</code>). It has been removed and we now use the internal <code>PhoneWindow</code> class. This allows the <code>getActionBar()</code> method in Activity to return a real <code>ActionBar</code> implementation in tests.</li>
+<li>To create and manage Activity instances, you must now use the ActivityController interface (see <code>Robolectric.buildActivity()</code>)</li>
+<li>Added <code>visible()</code> method to <code>ActivityController</code>. <code>visible()</code> must be called on an activity in order for <code>View.isShown()</code> to report back anything but false, since it hooks up the <code>Activity</code>&rsquo;s view hierarchy to the <code>WindowManager</code>.</li>
+<li>Some shadows were removed (<code>ShadowListActivity</code>)</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li><code>Animation.hasEnded()</code> works as expected</li>
+<li><code>AsyncTask</code>s no longer swallow exceptions that are thrown during <code>onPostExecute()</code></li>
+<li><code>Context.startActivity()</code> calls can now optionally check if the specified <code>Activity</code> is in the <code>PackageManager</code> using <code>Robolectric.checkActivities(true)</code></li>
+<li>Many many issues fixed</li>
+<li>Better support for Windows development environments</li>
+<li>Documentation updates!</li>
+</ul>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.1.1/">Release 2.1.1</a> - June 4, 2013</h2>
+
+<hr>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Qualifiers given in a <code>@Config</code> annotation on test classes weren&rsquo;t honored; fixed.</li>
+</ul>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.1/">Release 2.1</a> - May 29, 2013</h2>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Layout inflation is now handled by real Android OS code.</li>
+<li>Improved support for &ldquo;style&rdquo; attribute and theme queries in layout attributes.</li>
+<li>Implemented AssetManager.openXmlResourceParser().</li>
+<li>Support for using disk-based SQLite databases.</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>ActionBarSherlock should work, pretty much.</li>
+<li>Fixed bugs in Handler.sendMessageAtTime(), and various timing issues.</li>
+<li>Numerous other fixes and improvements from the Robolectric community! Thank you contributors!</li>
+</ul>
+
+<h4>Known Issues</h4>
+
+<ul>
+<li>Animations aren&rsquo;t well-supported.</li>
+</ul>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0/">Release 2.0</a> - May 14, 2013</h2>
+
+<hr>
+
+<p>This is the official release of Robolectric 2.0. It contains changes, improvements, and fixes since 1.2, too numerous to enumerate.</p>
+
+<p>See notes below for changes on the 2.0 branch.</p>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0-rc2/">Release 2.0-rc2</a> - May 13, 2013</h2>
+
+<hr>
+
+<p>This is the second release candidate for Robolectric 2.0. It contains several bug fixes since 2.0-rc1.</p>
+
+<p>See notes below for changes on the 2.0 branch.</p>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0-rc1/">Release 2.0-rc1</a> - May 9, 2013</h2>
+
+<hr>
+
+<p>This is the first release candidate for Robolectric 2.0. It contains several bug fixes since 2.0-alpha-3.</p>
+
+<p>See notes below for changes on the 2.0 branch.</p>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0-alpha-3/">Release 2.0-alpha-3</a> - May 8, 2013</h2>
+
+<hr>
+
+<p><em>Note:</em>
+This is an unstable alpha release: expect bugs and upcoming changes to the API.</p>
+
+<p>See <a href="http://robolectric.blogspot.com/2013/04/the-test-lifecycle-in-20.html">this blog post</a> for notes about changes to how tests are run.</p>
+
+<h4>Features</h4>
+
+<ul>
+<li>Massive realism upgrade: we removed many, many shadows, particularly for views and widgets, so they&rsquo;ll behave much more realistically.</li>
+<li>Dramatically improved resource loading, with support for themes and styles.</li>
+<li>Easier TestRunner setup and configuration.</li>
+<li>The new <code>@Config</code> annotation to specify config for a test class or test method:</li>
+<li>The SDK level to report: <code>@Config(reportSdk=Build.VERSION_CODES.FROYO)</code></li>
+<li>Qualifiers for resource loading: <code>@Config(qualifiers=&quot;fr-port-hdpi&quot;)</code></li>
+<li>Custom shadow classes to enable.</li>
+<li>For classes and methods that aren&rsquo;t explicitly shadowed, Robolectric now calls through to the real SDK code.</li>
+<li>Views now complain if you try to pass in a null Context. Don&rsquo;t do it!</li>
+<li>SDK method execution is now much much faster, especially in cases where we use the actual SDK code rather than a shadow (which will increasingly be the normal case).</li>
+<li>Performance and memory use improvements.</li>
+<li>Removed Hamcrest matchers; use <a href="https://github.com/square/fest-android">fest-android</a> instead.</li>
+<li>Numerous fixes and improvements from the Robolectric community. Thank you, contributors!</li>
+</ul>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0-alpha-2/">Release 2.0-alpha-2</a> - February 26, 2013</h2>
+
+<hr>
+
+<p><em>Note:</em>
+This is an unstable alpha release: expect bugs and upcoming changes to the API.</p>
+
+<p>See <a href="http://robolectric.blogspot.com/2013/02/migrating-to-robolectric-20.html">this blog post</a> for notes on upgrading.</p>
+
+<h4>Features</h4>
+
+<ul>
+<li>Switched from Javassist to ASM for bytecode manipulation: much faster.</li>
+<li>All classes in <code>android.support.*</code> are now unshadowed and should work as expected.</li>
+<li>Improved resource and library project support.</li>
+</ul>
+
+<hr>
+
+<h2><a href="http://repo1.maven.org/maven2/org/robolectric/robolectric/2.0-alpha-1/">Release 2.0-alpha-1</a> - January 29, 2013</h2>
+
+<hr>
+
+<p><em>Note:</em>
+This is an unstable alpha release: expect bugs and upcoming changes to the API.</p>
+
+<h4>Features</h4>
+
+<ul>
+<li>Support for library projects.</li>
+<li>More realistic resource loading, including system resources.</li>
+<li>Much better support for resource qualifiers (e.g. locale, resolution, etc.).</li>
+<li>Groundwork to remove many shadows and use actual android sdk code.</li>
+<li>Moved to org.robolectric package and maven groupId.</li>
+</ul>
+
+<hr>
+
+<h2>1.x Branch</h2>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/1.2">Release 1.2</a> - February 15, 2013</h3>
+
+<hr>
+
+<p>This release contains all updates since April 2nd, including numerous contributions from the Robolectric community
+(thanks!). There&rsquo;s partial support for Fragments, and tons of other shadow updates and bug fixes.</p>
+
+<p><em>Note:</em>
+This marks the last major release of the 1.x branch; the Robolectric core team is now focusing on the 2.x branch.</p>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/1.1">Release 1.1</a> - April 2, 2012</h3>
+
+<hr>
+
+<p><em>Note:</em>
+We had a little lapse in record-keeping here, sorry.</p>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/1.0">Release 1.0</a> - October 13, 2011</h3>
+
+<hr>
+
+<p><em>Note:</em>
+We had a little lapse in record-keeping here, sorry.</p>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/1.0-RC4/">Release 1.0-RC4</a> - August 11, 2011</h3>
+
+<hr>
+
+<p><em>Note:</em>
+We had a little lapse in record-keeping here, sorry.</p>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/1.0-RC1/">Release 1.0-RC1</a> - February 13, 2011</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Loads Android platform resources, looks at ANDROID_HOME, local.properties and &ldquo;which android&rdquo; to find the Android SDK</li>
+<li>General code cleanup and refactorings, Repackaging of source trees</li>
+<li>Improvements to TestAttributeSet (Thanks Ronald D.!)</li>
+<li>Ant task for mvn that adds the maps.jar to the local mvn repo</li>
+<li>Shadow for ViewStub</li>
+<li>Improvements for Http layer Shadows and fakes</li>
+<li>AndroidManifest.xml parsing improvements</li>
+<li>Added ShadowNotificationManager</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Fix bug where layouts were getting included twice</li>
+<li>Fix regressions for early API versions related to BluetoothAdaptor</li>
+<li>Fix bugs in menu view loading</li>
+<li>Various View loading improvements and bug fixes</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>ant maven-install-jars will update Maven with the correct version of maps.jar</p>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/0.9.8/">Release 0.9.8</a> - January 21, 2011</h3>
+
+<hr>
+
+<h4>One step back&hellip;</h4>
+
+<ul>
+<li>Temporarily reverted loading of Android platform resources &ndash; sorry, jumped the gun a bit, it wasn&rsquo;t quite ready.</li>
+</ul>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/0.9.7/">Release 0.9.7</a> - January 19, 2011</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Loading of Android platform resources - Thanks palfrey!</li>
+</ul>
+
+<h4>Bug Fix</h4>
+
+<ul>
+<li>Fixed ClassNotFoundExceptions when maps.jar is not being used by the project under test</li>
+</ul>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/0.9.6/">Release 0.9.6</a> - January 13, 2011</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Shadow implementation of MenuInflater - Thanks palfrey!</li>
+<li>Lots more shadows, including <code>Camera</code>, <code>Configuration</code>, <code>WebView</code>,
+<code>WebSettings</code>, and <code>WebViewClient</code>; better shadows for
+<code>Activity.startActivityForResult()</code> and <code>SharedPreferences</code> - Thanks mportuesi!</li>
+<li>Fixed a failure caused by the size of <code>Integer</code> in h2 being different than in SQLite - Thanks billmccord!</li>
+<li>The android-test and maps jars no longer need to be on your project&rsquo;s test classpath to use Robolectric. You now need
+to use <code>RobolectricForMaps.shadowOf()</code> to get the shadow of <code>GeoPoint</code>s, <code>MapView</code>s,
+<code>MapController</code>s, and <code>ItemizedOverlay</code>s.</li>
+</ul>
+
+<hr>
+
+<h3><a href="http://repo1.maven.org/maven2/com/pivotallabs/robolectric/0.9.5/">Release 0.9.5</a> - December 23, 2010</h3>
+
+<hr>
+
+<h4>Note</h4>
+
+<p>We have recently changed the Robolectric project structure to work with Maven. If you are developing directly from the
+repository rather than from a jar release then you should close your IDE, delete its project files (.classpath,
+&#42;.iml, etc&hellip;) and reload the project by importing the pom.xml into your IDE. This process has been tested with
+both IntelliJ and Eclipse.</p>
+
+<h4>Features</h4>
+
+<ul>
+<li>Improved testing of asynchronous and background tasks. <code>Looper</code>s and <code>AsyncTask</code> background
+threads are now un-paused by default (see <code>Robolectric.pauseMainLooper()</code> et al.).</li>
+<li>Shadows for <code>Bitmap</code>, <code>BitmapFactory</code>, and <code>Canvas</code>, and related classes, with
+textual descriptions (see <code>Robolectric.visualize()</code>) - Thanks xtremelabs!</li>
+<li>Improved HTTP testing (see <code>Robolectric.addHttpResponseRule()</code>).</li>
+<li>Shadow for <code>Camera</code>, <code>Camera.Parameters</code>, <code>MediaRecorder</code> - Thanks mportuesi!</li>
+<li>Shadow for <code>ArrayAdapter</code> - Thanks mylacc!</li>
+<li>Shadow for <code>ExpandableListView</code> - Thanks casidiablo!</li>
+<li>Nicer stack traces from within shadowed methods.</li>
+<li>Now available from Maven Central (and built with Maven).</li>
+<li>More shadowed methods on numerous classes.</li>
+<li>The <code>onCreate()</code> method of the application is no longer called automatically as part of test setup and
+must now be called manually.</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.9.4 - December 14, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Gingerbread support</li>
+<li>HTTP client support and shadowing</li>
+<li>Shadow for <code>AssetManager</code> - Thanks gnorsilva!</li>
+<li>Support string references in string resources.</li>
+<li>Support for View background attribute resource id - Thanks macarse!</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Remove errant semicolon from generated ShadowSQLiteQueryBuilder - Thanks billmccord!</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.9.3 - December 3, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Shadow for <code>AsyncTask</code></li>
+<li>Integrated contributions for <code>ShadowConnectivityManager</code> and <code>ShadowNetworkInfo</code> - Thanks
+macarse!</li>
+<li>A HUGE contribution from the team at <a href="http://www.zoodles.com">Zoodles</a>, the in test SQLite database
+(<code>ShadowSQLiteDababase</code>) is backed by h2, reducing the need for database mocking. Thank You Zoodles!</li>
+<li>Robolectric now instantiates applications that are of the type specified in the AndroidManifest.xml - Thanks
+Mike Burton!</li>
+<li>The Robolectric jars will now work for projects that use the standard Android SDK (and not the Android Google APIs
+version which contains optional APIs such as Google Maps).</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Windows fixes for path separators</li>
+<li>Windows users can ant build the robolectric library and run the robolectric tests</li>
+<li>Colors that reference other colors</li>
+<li>Robolectric will now work on projects that do not use the Google Maps API and other optional packages.</li>
+</ul>
+
+<h4>Other</h4>
+
+<ul>
+<li>We have added <a href="http://code.google.com/p/roboguice/">Roboguice</a> integration to the
+<a href="http://github.com/robolectric/RobolectricSample">RobolectricSample</a> project.</li>
+<li>Support for maven and submission to central is WIP</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.9.2 - November 24, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Shadow classes for SQLite database (Thanks mportuesi!)</li>
+<li>Lint test for shadow methods that match Android methods but are not annotated with @Implementation</li>
+<li>Shadow support for raw resources (Thanks macarse!)</li>
+<li>Improved quick start documentation</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Ignore non xml files in layouts directory (Subversion .svn directories were causing cryptic errors, Thanks rlgomes!)</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.9.1 - November 19, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Integrated support for several new Shadow classes from pull requests &ndash; thank you mportuesi!</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Fixed JSON &ldquo;stub!&rdquo; exceptions.</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.9 - November 17, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>Integrated support for several new Shadow classes from pull requests - Thank you contributors!</li>
+<li>Made the default RobolectricTestRunner robust enough to work without modification for most projects</li>
+<li>Improved the extensibility of RobolectricTestRunner for those projects that do need to add more functionality</li>
+<li>Encapsulated most of the fields on the Shadow classes</li>
+<li>Added support for the android.net.Uri class so that it works the same way in tests that it does in production. This is
+a departure from the behavior of the Shadow classes. We did this because Uri is a utility class, and it would be
+almost impossible to write a useful Shadow class for it.</li>
+<li>Improved documentation</li>
+<li>Added run configurations to make it easier to get Robolectric working out of the box</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>Fixed support for equals(), hashcode(), and toString()</li>
+<li>Improved the documentation for getting Robolectric to work under Eclipse</li>
+</ul>
+
+<hr>
+
+<h3>Release 0.8 - November 5, 2010</h3>
+
+<hr>
+
+<h4>Features</h4>
+
+<ul>
+<li>&lt;include&gt; tags apply their attributes to the imported element</li>
+<li>equals(), hashcode(), and toString() can be overridden on all Shadow classes</li>
+<li>Put a link to the Tracker project in the Robolectric User Guide</li>
+<li>Added support for Eclipse</li>
+</ul>
+
+<h4>Bug Fixes</h4>
+
+<ul>
+<li>ResourceLoader obtained from context, not stored statically</li>
+<li>Instrumented class cache no longer retains stale entries</li>
+</ul>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
