@@ -8,3 +8,8 @@ gem 'middleman-google-analytics'
 
 gem 'redcarpet'
 gem 'bootstrap-sass'
+
+group :development do
+  gem 'guard'
+  gem 'guard-livereload'
+end
